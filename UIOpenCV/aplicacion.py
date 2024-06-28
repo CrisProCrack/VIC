@@ -11,19 +11,39 @@ def main(page: Page):
         group_alignment=-0.9,
         destinations=[
             NavigationRailDestination(
-               icon=icons.FAVORITE_BORDER,
-               selected_icon=icons.FAVORITE,
-            label="First" 
+               icon=icons.HOME_SHARP,
+               selected_icon=icons.HOME,
+               label="Inicio" 
             ),
             NavigationRailDestination(
-               icon_content=Icon(icons.BOOKMARK_BORDER),
-               selected_icon_content=Icon(icons.BOOKMARK),
-               label="Second"
+               icon=icons.LINKED_CAMERA_ROUNDED,
+               selected_icon=icons.LINKED_CAMERA,
+               label="Aplicación" 
             ),
             NavigationRailDestination(
-               icon=icons.SETTINGS_OUTLINED,
-               selected_icon_content=Icon(icons.SETTINGS),
-            label_content=Text("Settings") 
+               icon=icons.ACCOUNT_CIRCLE_SHARP,
+               selected_icon=icons.ACCOUNT_CIRCLE,
+               label="Usuarios" 
+            ),
+            NavigationRailDestination(
+               icon=icons.BAR_CHART_OUTLINED,
+               selected_icon=icons.BAR_CHART,
+               label="Estadísticas" 
+            ),
+            NavigationRailDestination(
+               icon=icons.HELP_SHARP,
+               selected_icon=icons.HELP,
+               label="Ayuda" 
+            ),
+            NavigationRailDestination(
+               icon=icons.SETTINGS_SHARP,
+               selected_icon=icons.SETTINGS,
+               label="Configuración" 
+            ),
+             NavigationRailDestination(
+               icon=icons.EXIT_TO_APP_SHARP,
+               selected_icon=icons.EXIT_TO_APP,
+               label="Salir" 
             ),
         ],
         on_change=lambda e: print("Selected destination:", e.control.selected_index),
