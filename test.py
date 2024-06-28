@@ -1,33 +1,46 @@
 import flet as ft
-from flet import TextField
-from flet_core.control_event import ControlEvent
 
+def main(page: ft.Page):
+    def items(count):
+        items = []
+        for i in range(1, count + 1):
+            items.append(
+                ft.Container(
+                    content=ft.Text(value=str(i)),
+                    alignment=ft.alignment.center,
+                    width=50,
+                    height=50,
+                    bgcolor=ft.colors.AMBER_500,
+                )
+            )
+        return items
 
-def main(page: ft.Page) -> None:
-    page.title = 'Increment counter'
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.theme_mode = 'light'
-
-    text_number: TextField = TextField(value='0', text_align=ft.TextAlign.RIGHT, width=100)
-
-    def decrement(e: ControlEvent) -> None:
-        text_number.value = str(int(text_number.value) - 1)
-        page.update()
-
-    def increment(e: ControlEvent) -> None:
-        text_number.value = str(int(text_number.value) + 1)
-        page.update()
+    def column_with_horiz_alignment(align: ft.CrossAxisAlignment):
+        return ft.Column(
+            [
+                ft.Text(str(align), size=16),
+                ft.Container(
+                    content=ft.Column(
+                        items(3),
+                        alignment=ft.MainAxisAlignment.START,
+                        horizontal_alignment=align,
+                    ),
+                    bgcolor=ft.colors.AMBER_100,
+                    width=100,
+                ),
+            ]
+        )
 
     page.add(
         ft.Row(
-            [ft.IconButton(icon=ft.icons.REMOVE, on_click=decrement),
-             text_number,
-             ft.IconButton(icon=ft.icons.ADD, on_click=increment)
-             ],
-            alignment=ft.MainAxisAlignment.CENTER
+            [
+                column_with_horiz_alignment(ft.CrossAxisAlignment.START),
+                column_with_horiz_alignment(ft.CrossAxisAlignment.CENTER),
+                column_with_horiz_alignment(ft.CrossAxisAlignment.END),
+            ],
+            spacing=30,
+            alignment=ft.MainAxisAlignment.START,
         )
     )
 
-
-if __name__ == '__main__':
-    ft.app(target=main)
+ft.app(target=main)

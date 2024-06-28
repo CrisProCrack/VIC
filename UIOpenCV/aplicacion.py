@@ -2,6 +2,42 @@ import flet as ft
 from flet import *
 
 def main(page: Page):
+    def dropdown_changed(e):
+        print(f"Dropdown 1 changed to {e.control.value}")
+    def dropdown2_changed(e):
+        print(f"Dropdown 2 changed to {e.control.value}")
+    def dropdown3_changed(e):
+        print(f"Dropdown 3 changed to {e.control.value}")
+
+    dropdown1 = Dropdown(
+        width=200,
+        options=[
+            ft.dropdown.Option("Opción 1"),
+            ft.dropdown.Option("Opción 2"),
+            ft.dropdown.Option("Opción 3"),
+        ],
+        on_change=dropdown_changed
+    )
+
+    dropdown2 = Dropdown(
+        width=200,
+        options=[
+            ft.dropdown.Option("Opción A"),
+            ft.dropdown.Option("Opción B"),
+            ft.dropdown.Option("Opción C"),
+        ],
+        on_change=dropdown2_changed
+    )
+    dropdown3 = Dropdown(
+        width=200,
+        options=[
+            ft.dropdown.Option("Opción A"),
+            ft.dropdown.Option("Opción B"),
+            ft.dropdown.Option("Opción C"),
+        ],
+        on_change=dropdown2_changed
+    )
+
     rail = NavigationRail(
         selected_index=0,
         label_type=NavigationRailLabelType.ALL,
@@ -48,23 +84,56 @@ def main(page: Page):
         ],
         on_change=lambda e: print("Selected destination:", e.control.selected_index),
     )
-    
+
     page.add(
         Row(
             [
-            rail,
-            VerticalDivider(width=1),
-            Column(
-                [
-                    Text("Aplicación", theme_style=ft.TextThemeStyle.DISPLAY_LARGE),
-                ],
-                alignment=MainAxisAlignment.START, 
-                expand=True
-                )
-        ],
+                rail,
+                VerticalDivider(width=1),
+                Column(
+                    [
+                        Text("Aplicación", theme_style=ft.TextThemeStyle.DISPLAY_LARGE),
+                        Container(
+                        alignment=ft.alignment.center,
+                        bgcolor=ft.colors.AMBER,
+                        width=284,
+                        height=220,
+                        border_radius=10,
+                    ),
+                        # Aquí puedes agregar más contenido debajo del título "Aplicación"
+                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", theme_style=ft.TextThemeStyle.BODY_LARGE),
+                        Container(expand=True),  # Este contenedor empuja el contenido hacia arriba
+                    ],
+                    expand=True,
+                    alignment=MainAxisAlignment.START,
+                ),
+                Column(
+                    [
+                        Container(
+                            content=Column([
+                                dropdown1,
+                                Container(height=20),  # Espacio entre los dropdowns
+                                dropdown2,
+                            ]),
+                            alignment=alignment.center,
+                        ),
+                        Slider(width=300,height=60),
+                        # Aquí puedes agregar más contenido debajo del dropdown
+                        # Por ejemplo:
+                        # Container(
+                        #     content=Text("Contenido adicional"),
+                        #     margin=margin.only(top=20),
+                        # ),
+                        # Puedes seguir agregando más widgets aquí
+                        Container(height=20),  # Espacio entre los dropdowns
+                        dropdown3,
+                    ],
+                    alignment=MainAxisAlignment.CENTER,
+                    expand=True,
+                ),
+            ],
             expand=True,
         )
-        
     )
     
 if __name__ == "__main__":
