@@ -93,15 +93,22 @@ def main(page: Page):
                 Column(
                     [
                         Text("Aplicación", theme_style=ft.TextThemeStyle.DISPLAY_LARGE),
-                        Container(
+                        Container(height=53),  # Este contenedor empuja el contenido hacia abajo
+                        Container
+                        (
                         alignment=ft.alignment.center,
                         bgcolor=ft.colors.AMBER,
                         width=284,
                         height=220,
                         border_radius=10,
-                    ),
+                        ),
+                        Container(height=10),  # Espacio entre el texto y los dropdowns
                         # Aquí puedes agregar más contenido debajo del título "Aplicación"
-                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", theme_style=ft.TextThemeStyle.BODY_LARGE),
+                        Text(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 
+                            theme_style=ft.TextThemeStyle.BODY_LARGE,
+                            width=284,height=220,
+                            text_align=ft.TextAlign.JUSTIFY),
                         Container(expand=True),  # Este contenedor empuja el contenido hacia arriba
                     ],
                     expand=True,
