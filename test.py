@@ -1,46 +1,88 @@
 import flet as ft
+from flet import *
 
-def main(page: ft.Page):
-    def items(count):
-        items = []
-        for i in range(1, count + 1):
-            items.append(
-                ft.Container(
-                    content=ft.Text(value=str(i)),
-                    alignment=ft.alignment.center,
-                    width=50,
-                    height=50,
-                    bgcolor=ft.colors.AMBER_500,
-                )
-            )
-        return items
+def main(page: Page):
+    page.bgcolor = ft.colors.PINK_50
 
-    def column_with_horiz_alignment(align: ft.CrossAxisAlignment):
-        return ft.Column(
-            [
-                ft.Text(str(align), size=16),
-                ft.Container(
-                    content=ft.Column(
-                        items(3),
-                        alignment=ft.MainAxisAlignment.START,
-                        horizontal_alignment=align,
-                    ),
-                    bgcolor=ft.colors.AMBER_100,
-                    width=100,
-                ),
-            ]
-        )
+    rail = NavigationRail(
+        selected_index=2,
+        label_type=NavigationRailLabelType.ALL,
+        min_width=100,
+        min_extended_width=200,
+        group_alignment=-0.9,
+        destinations=[
+            NavigationRailDestination(
+                icon=icons.HOME_SHARP,
+                selected_icon=icons.HOME,
+                label="Inicio"
+            ),
+            NavigationRailDestination(
+                icon=icons.LINKED_CAMERA_ROUNDED,
+                selected_icon=icons.LINKED_CAMERA,
+                label="Aplicación"
+            ),
+            NavigationRailDestination(
+                icon=icons.ACCOUNT_CIRCLE_SHARP,
+                selected_icon=icons.ACCOUNT_CIRCLE,
+                label="Usuario"
+            ),
+            NavigationRailDestination(
+                icon=icons.BAR_CHART_OUTLINED,
+                selected_icon=icons.BAR_CHART,
+                label="Estadísticas"
+            ),
+            NavigationRailDestination(
+                icon=icons.HELP_SHARP,
+                selected_icon=icons.HELP,
+                label="Ayuda"
+            ),
+            NavigationRailDestination(
+                icon=icons.SETTINGS_SHARP,
+                selected_icon=icons.SETTINGS,
+                label="Configuración"
+            ),
+            NavigationRailDestination(
+                icon=icons.EXIT_TO_APP_SHARP,
+                selected_icon=icons.EXIT_TO_APP,
+                label="Salir"
+            ),
+        ],
+    )
+
+    profile_pic = Container(
+        content=Icon(icons.ACCOUNT_CIRCLE, size=100, color=ft.colors.BLACK),
+        width=100,
+        height=100,
+    )
+
+    user_info = Column(
+        [
+            Text("Usuario", style=TextThemeStyle.HEADLINE_LARGE, weight=FontWeight.BOLD),
+            profile_pic,
+            TextButton("Actualizar foto de perfil"),
+            TextField(label="Nombre"),
+            TextField(label="Género"),
+            TextField(label="Fecha de nacimiento"),
+        ],
+        spacing=20,
+        alignment=MainAxisAlignment.CENTER,
+        horizontal_alignment=CrossAxisAlignment.CENTER,
+    )
 
     page.add(
-        ft.Row(
+        Row(
             [
-                column_with_horiz_alignment(ft.CrossAxisAlignment.START),
-                column_with_horiz_alignment(ft.CrossAxisAlignment.CENTER),
-                column_with_horiz_alignment(ft.CrossAxisAlignment.END),
+                rail,
+                VerticalDivider(width=1),
+                Container(
+                    content=user_info,
+                    expand=True,
+                    alignment=alignment.center,
+                ),
             ],
-            spacing=30,
-            alignment=ft.MainAxisAlignment.START,
+            expand=True,
         )
     )
 
-ft.app(target=main)
+if __name__ == "__main__":
+    ft.app(target=main)

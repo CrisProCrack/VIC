@@ -3,7 +3,7 @@ from flet import *
 
 def main(page: Page):
     rail = NavigationRail(
-        selected_index=0,
+        selected_index=2,
         label_type=NavigationRailLabelType.ALL,
         min_width=100,
         min_extended_width=400,
@@ -49,6 +49,26 @@ def main(page: Page):
         on_change=lambda e: print("Selected destination:", e.control.selected_index),
     )
 
+    profile_pic = Container(
+        content=Icon(icons.ACCOUNT_CIRCLE, size=100,color=colors.BLACK),
+        width=100,
+        height=100,
+    )
+    
+    user_info = Column(
+        [
+            profile_pic,
+            TextButton("Actualizar foto de perfil"),
+            TextField(label="Nombre"),
+            TextField(label="Género"),
+            TextField(label="Fecha de nacimiento"),
+        ],
+        spacing=20,
+        alignment=MainAxisAlignment.CENTER,
+        horizontal_alignment=CrossAxisAlignment.CENTER,
+    )
+    
+    
     page.add(
         Row(
             [
@@ -64,15 +84,11 @@ def main(page: Page):
                     alignment=MainAxisAlignment.START,
                     expand=True,
                 ),
-                Column(
-                    [
-                        Text(
-                            "Si",
-                        ),
-                    ],
-                    alignment=MainAxisAlignment.CENTER,
+                Container(
+                    content=user_info,
                     expand=True,
-                ),
+                    alignment=alignment.center,
+                )
             ],
             expand=True,
         )

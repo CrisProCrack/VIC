@@ -128,7 +128,7 @@ def main(page: Page):
                             ]),
                             alignment=alignment.center,
                         ),
-                        Slider(width=300, height=60),
+                        Slider(width=300),
                         # Aquí puedes agregar más contenido debajo del dropdown
                         # Por ejemplo:
                         # Container(
