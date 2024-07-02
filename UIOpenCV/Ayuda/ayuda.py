@@ -2,7 +2,6 @@ import flet as ft
 from flet import *
 
 def main(page: Page):
-
     rail = NavigationRail(
         selected_index=4,
         label_type=NavigationRailLabelType.ALL,
@@ -70,7 +69,7 @@ def main(page: Page):
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
                             "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                             theme_style=TextThemeStyle.BODY_MEDIUM,
-                            ),
+                        ),
                     ],
                     spacing=10,
                     expand=True,
@@ -84,7 +83,7 @@ def main(page: Page):
         margin=margin.only(bottom=10),
     )
     
-    ayuda_lista = [ayuda_contenedor for _ in range(10)]
+    ayuda_lista = [ayuda_contenedor for _ in range(5)]
 
     content = ListView(
         [
@@ -106,7 +105,7 @@ def main(page: Page):
                 Container(
                     content=content,
                     expand=True,
-                    height=page.window_height,
+                    
                 )
             ],
             expand=True,
@@ -115,3 +114,4 @@ def main(page: Page):
 
 if __name__ == "__main__":
     ft.app(target=main)
+    
