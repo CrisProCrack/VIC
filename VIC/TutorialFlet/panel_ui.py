@@ -19,7 +19,7 @@ class PanelUI(ft.Pagelet):
         #    code_style=ft.TextStyle(font_family="RobotoMono", size=16),
         #    on_tap_link=lambda e: self.page.launch_url(e.data),
         #)
-        mkd_texto = cm.crear_texto_markdown("assets/ui.md", self)
+        #mkd_texto = cm.crear_texto_markdown("assets/ui.md", self)
 
         btn_mostrar_ui = ft.FilledButton("Mostar UI",
                                          icon=ft.icons.ARROW_OUTWARD,
@@ -34,17 +34,17 @@ class PanelUI(ft.Pagelet):
         #                        code_theme="atom-one-dark",
         #                        code_style=ft.TextStyle(font_family="RobotoMono", size=16)
         #                    )
-        codigo, mkd_codigo = cm.crear_codigo_markdown("ui_licenciatura.py")
+        #codigo, mkd_codigo = cm.crear_codigo_markdown("ui_licenciatura.py")
 
-        txt_copiar = ft.Markdown("Código fuente para crear la UI.", selectable=True)
-        ico_copiar = ft.IconButton(ft.icons.COPY,
-                            tooltip="Copiar código fuente",
-                            on_click=lambda e: self.page.set_clipboard(codigo))
-        row_copiar = ft.Row([txt_copiar, ico_copiar])
+        #txt_copiar = ft.Markdown("Código fuente para crear la UI.", selectable=True)
+        #ico_copiar = ft.IconButton(ft.icons.COPY,
+        #                    tooltip="Copiar código fuente",
+        #                    on_click=lambda e: self.page.set_clipboard(codigo))
+        #row_copiar = ft.Row([txt_copiar, ico_copiar])
         
-        self.content=ft.Row([ft.Column([mkd_texto, btn_mostrar_ui, row_copiar, mkd_codigo],
-                                       scroll=ft.ScrollMode.ALWAYS,
-                                       expand=True)])
+        #self.content=ft.Row([ft.Column([mkd_texto, btn_mostrar_ui, row_copiar, mkd_codigo],
+                                       #scroll=ft.ScrollMode.ALWAYS,
+                                       #expand=True)])
 
 
 if __name__ == "__main__":

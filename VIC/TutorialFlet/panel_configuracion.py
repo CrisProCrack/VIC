@@ -9,12 +9,12 @@ class PanelConfiguracion(ft.Pagelet):
         self.padding = 20
         self.appbar = cm.crear_app_bar(ft.icons.SETTINGS, "Configuración y puesta a punto")
         
-        mkd_texto = cm.crear_texto_markdown_formateado("assets/config.md", self)
+        #mkd_texto = cm.crear_texto_markdown_formateado("assets/config.md", self)
         #mkd_texto.on_tap_link=lambda e: self.page.launch_url(e.data)
 
-        self.content=ft.Row([ft.Column([mkd_texto],
-                                       scroll=ft.ScrollMode.ALWAYS,
-                                       expand=True)])
+        #self.content=ft.Row([ft.Column([mkd_texto],
+                                      # scroll=ft.ScrollMode.ALWAYS,
+                                      # expand=True)])
 
 
 if __name__ == "__main__":

@@ -71,6 +71,6 @@ def main(page: ft.Page):
             )
 
 
-ft.app(target=main) # view=ft.AppView.WEB_BROWSER
+ft.app(target=main, assets_dir="assets") # view=ft.AppView.WEB_BROWSER
 # view=None
 # web_renderer=ft.WebRenderer.HTML
