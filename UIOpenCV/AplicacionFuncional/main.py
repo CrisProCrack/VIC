@@ -5,55 +5,62 @@ from configuracion import ConfiguracionView
 from usuario import UsuarioView
 
 def main(page: Page):
-    def route_change(route):
-        page.views.clear()
-        if page.route == "/" or page.route == "/aplicacion":
-            page.views.append(
-                View(
-                    "/aplicacion",
-                    [
-                        AplicacionView(page)
-                    ],
-                )
-            )
-        elif page.route == "/ayuda":
-            page.views.append(
-                View(
-                    "/ayuda",
-                    [
-                        AyudaView(page)
-                    ],
-                )
-            )
-        elif page.route == "/configuracion":
-            page.views.append(
-                View(
-                    "/configuracion",
-                    [
-                        ConfiguracionView(page)
-                    ],
-                )
-            )
-        elif page.route == "/usuario":
-            page.views.append(
-                View(
-                    "/usuario",
-                    [
-                        UsuarioView(page)
-                    ],
-                )
-            )
-        page.update()
+    def set_pantalla(e: ControlEvent):
+        cnt_principal.content = lst_pantallas[e.control.selected_index]
+        cnt_principal.update()
 
-    def view_pop(view):
-        page.views.pop()
-        top_view = page.views[-1]
-        page.go(top_view.route)
-
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
+    pnl_inicio = AplicacionView(page)  # Proporcionar 'page' como argumento
+    cnt_principal = Container(Text("WIP"), expand=True)
+    #cnt_principal = Container(content=pnl_inicio, expand=True)
     
-    # Iniciar directamente en la vista de aplicación
-    page.go("/aplicacion")
-
+    lst_pantallas = [Text("WIP"), pnl_inicio, UsuarioView(page), ConfiguracionView(page), AyudaView(page)]
+    
+    def set_pantalla(e):
+        cnt_principal.content = lst_pantallas[e.control.selected_index]
+        page.update()
+    
+    nav_rail = NavigationRail(
+        selected_index=0,
+        label_type=NavigationRailLabelType.ALL,
+        min_width=100,
+        min_extended_width=400,
+        group_alignment=-1,
+        destinations=[
+            NavigationRailDestination(
+                icon=icons.HOME_OUTLINED,
+                selected_icon=icons.HOME,
+                label="Inicio"
+            ),
+            NavigationRailDestination(
+                icon=icons.LINKED_CAMERA_ROUNDED,
+                selected_icon=icons.LINKED_CAMERA,
+                label="Aplicación"
+            ),
+            NavigationRailDestination(
+                icon=icons.ACCOUNT_CIRCLE_SHARP,
+                selected_icon=icons.ACCOUNT_CIRCLE,
+                label="Usuarios"
+            ),
+            NavigationRailDestination(
+                icon=icons.SETTINGS_OUTLINED,
+                selected_icon=icons.SETTINGS,
+                label="Configuración"
+            ),
+            NavigationRailDestination(
+                icon=icons.HELP_OUTLINE,
+                selected_icon=icons.HELP,
+                label="Ayuda"
+            )
+        ],
+        on_change=set_pantalla
+    )
+    
+    page.add(
+        Row([
+            nav_rail,
+            VerticalDivider(width=1),
+            cnt_principal
+        ], expand=True)
+    )
+    
 app(target=main)
