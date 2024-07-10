@@ -1,11 +1,10 @@
-import flet as ft
 from flet import *
 
 class AyudaView(UserControl):
     def __init__(self, page):
         super().__init__()
         self.page = page
-
+    
     def build(self):
         rail = NavigationRail(
             selected_index=4,
@@ -53,7 +52,7 @@ class AyudaView(UserControl):
             ],
             on_change=lambda e: self.page.go(f"/{e.control.selected_index}"),
         )
-        
+    
         ayuda_contenedor = Container(
             content=Row(
                 [
@@ -89,7 +88,7 @@ class AyudaView(UserControl):
         )
         
         ayuda_lista = [ayuda_contenedor for _ in range(5)]
-
+        
         content = ListView(
             [
                 Text(

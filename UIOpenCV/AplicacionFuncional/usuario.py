@@ -1,14 +1,12 @@
-import flet as ft
 from flet import *
 
-class AyudaView(UserControl):
+class UsuarioView(UserControl):
     def __init__(self, page):
         super().__init__()
         self.page = page
-
     def build(self):
         rail = NavigationRail(
-            selected_index=4,
+            selected_index=2,
             label_type=NavigationRailLabelType.ALL,
             min_width=100,
             min_extended_width=400,
@@ -54,62 +52,44 @@ class AyudaView(UserControl):
             on_change=lambda e: self.page.go(f"/{e.control.selected_index}"),
         )
         
-        ayuda_contenedor = Container(
-            content=Row(
-                [
-                    Container(
-                        width=100,
-                        height=100,
-                        border=border.all(1, colors.BLACK),
-                        content=Icon(icons.CLOSE),
-                        alignment=alignment.center,
-                    ),
-                    Column(
-                        [
-                            Text(
-                                "Nisi quis",
-                                theme_style=TextThemeStyle.TITLE_LARGE,
-                            ),
-                            Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
-                                "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                                theme_style=TextThemeStyle.BODY_MEDIUM,
-                            ),
-                        ],
-                        spacing=10,
-                        expand=True,
-                    ),
-                ],
-                spacing=20,
-            ),
-            bgcolor=colors.GREY_300,
-            padding=20,
-            border_radius=10,
-            margin=margin.only(bottom=10),
+        profile_pic = Container(
+            content=Icon(icons.ACCOUNT_CIRCLE, size=180,color=colors.BLACK),
+            width=180,
+            height=180,
         )
         
-        ayuda_lista = [ayuda_contenedor for _ in range(5)]
-
-        content = ListView(
-            [
-                Text(
-                    "Ayuda",
-                    theme_style=TextThemeStyle.HEADLINE_LARGE,
-                ),
-                *ayuda_lista,
-            ],
-            spacing=20,
-            expand=True,
-        )
-
+        user_info = Column(
+        [
+            profile_pic,
+            TextButton("Actualizar foto de perfil"),
+            Container(height=10),
+            TextField(label="Nombre"),
+            TextField(label="Género"),
+            TextField(label="Fecha de nacimiento"),
+        ],
+        spacing=10,
+        alignment=MainAxisAlignment.CENTER,
+        horizontal_alignment=CrossAxisAlignment.CENTER,
+    )
+        header_usuario = Column(
+        [
+            Text(
+                "Usuario",
+                style=TextThemeStyle.DISPLAY_LARGE,
+            ),
+            Container(
+                content=user_info,
+                expand=True,
+                alignment=alignment.center,
+            )
+        ],
+        expand=True,
+    )
         return Row(
             [
                 rail,
                 VerticalDivider(width=1),
-                Container(
-                    content=content,
-                    expand=True,
-                )
+                header_usuario,
             ],
             expand=True,
         )

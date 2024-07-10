@@ -1,14 +1,13 @@
-import flet as ft
 from flet import *
 
-class AyudaView(UserControl):
+class ConfiguracionView(UserControl):
     def __init__(self, page):
         super().__init__()
         self.page = page
-
+    
     def build(self):
         rail = NavigationRail(
-            selected_index=4,
+            selected_index=5,
             label_type=NavigationRailLabelType.ALL,
             min_width=100,
             min_extended_width=400,
@@ -54,54 +53,69 @@ class AyudaView(UserControl):
             on_change=lambda e: self.page.go(f"/{e.control.selected_index}"),
         )
         
-        ayuda_contenedor = Container(
-            content=Row(
-                [
-                    Container(
-                        width=100,
-                        height=100,
-                        border=border.all(1, colors.BLACK),
-                        content=Icon(icons.CLOSE),
-                        alignment=alignment.center,
-                    ),
-                    Column(
-                        [
-                            Text(
-                                "Nisi quis",
-                                theme_style=TextThemeStyle.TITLE_LARGE,
-                            ),
-                            Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
-                                "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                                theme_style=TextThemeStyle.BODY_MEDIUM,
-                            ),
-                        ],
-                        spacing=10,
-                        expand=True,
-                    ),
-                ],
-                spacing=20,
+        content = Column(
+        [
+            Text(
+                "Configuración",
+                theme_style=TextThemeStyle.HEADLINE_LARGE,
             ),
-            bgcolor=colors.GREY_300,
-            padding=20,
-            border_radius=10,
-            margin=margin.only(bottom=10),
-        )
-        
-        ayuda_lista = [ayuda_contenedor for _ in range(5)]
-
-        content = ListView(
-            [
-                Text(
-                    "Ayuda",
-                    theme_style=TextThemeStyle.HEADLINE_LARGE,
+            Text("Usuario",
+                    style=TextThemeStyle.TITLE_LARGE,
+                    weight=FontWeight.BOLD),
+            Text("Cambiar contraseña",
+                    style=TextThemeStyle.BODY_LARGE,
                 ),
-                *ayuda_lista,
-            ],
-            spacing=20,
-            expand=True,
-        )
-
+            Row(
+                [
+                    TextField(
+                        label="Contraseña nueva", 
+                        width=250),
+                    TextField(
+                        label="Repetir contraseña", 
+                        width=250),
+                    ElevatedButton(
+                        "Cambiar", 
+                        bgcolor=colors.BLACK, 
+                        color=colors.WHITE),
+                ],
+                alignment=MainAxisAlignment.START,
+            ),
+            Divider(),
+            Text("Aplicación", 
+                 style=TextThemeStyle.TITLE_LARGE, 
+                 weight=FontWeight.BOLD),
+            Row(
+                [
+                    Text("Seleccionar cámaras disponibles",
+                        style=TextThemeStyle.BODY_LARGE
+                        ),
+                    Dropdown(
+                        width=260,
+                        options=[
+                            dropdown.Option("Opción 1"),
+                            dropdown.Option("Opción 2"),
+                        ],
+                    ),
+                    Container(width=1),
+                    Container(width=1),
+                ],
+                alignment=MainAxisAlignment.SPACE_BETWEEN,
+            ),
+            Row(
+                [
+                    Text("Brillo",
+                            style=TextThemeStyle.BODY_LARGE,
+                        ),
+                    Slider(min=0, max=100, divisions=2, width=300),
+                    Container(width=1),
+                    
+                ],
+                alignment=MainAxisAlignment.SPACE_BETWEEN,
+            ),
+        ],
+        spacing=20,
+    )
+    
         return Row(
             [
                 rail,
