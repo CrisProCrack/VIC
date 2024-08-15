@@ -1,115 +1,64 @@
 import flet as ft
-from flet import *
 
-class AyudaView(UserControl):
-    def __init__(self, page):
-        super().__init__()
-        self.page = page
+def main(page: ft.Page):
+    page.title = "Interfaz de Aplicación"
+    page.bgcolor = "#FFF0F5"  # Color de fondo rosa claro
 
-    def build(self):
-        rail = NavigationRail(
-            selected_index=4,
-            label_type=NavigationRailLabelType.ALL,
-            min_width=100,
-            min_extended_width=400,
-            leading=FloatingActionButton(icon=icons.CREATE, text="Añadir"),
-            group_alignment=-0.9,
-            destinations=[
-                NavigationRailDestination(
-                    icon=icons.HOME_SHARP,
-                    selected_icon=icons.HOME,
-                    label="Inicio"
-                ),
-                NavigationRailDestination(
-                    icon=icons.LINKED_CAMERA_ROUNDED,
-                    selected_icon=icons.LINKED_CAMERA,
-                    label="Aplicación"
-                ),
-                NavigationRailDestination(
-                    icon=icons.ACCOUNT_CIRCLE_SHARP,
-                    selected_icon=icons.ACCOUNT_CIRCLE,
-                    label="Usuarios"
-                ),
-                NavigationRailDestination(
-                    icon=icons.BAR_CHART_OUTLINED,
-                    selected_icon=icons.BAR_CHART,
-                    label="Estadísticas"
-                ),
-                NavigationRailDestination(
-                    icon=icons.HELP_SHARP,
-                    selected_icon=icons.HELP,
-                    label="Ayuda"
-                ),
-                NavigationRailDestination(
-                    icon=icons.SETTINGS_SHARP,
-                    selected_icon=icons.SETTINGS,
-                    label="Configuración"
-                ),
-                NavigationRailDestination(
-                    icon=icons.EXIT_TO_APP_SHARP,
-                    selected_icon=icons.EXIT_TO_APP,
-                    label="Salir"
-                ),
-            ],
-            on_change=lambda e: self.page.go(f"/{e.control.selected_index}"),
-        )
-        
-        ayuda_contenedor = Container(
-            content=Row(
-                [
-                    Container(
-                        width=100,
-                        height=100,
-                        border=border.all(1, colors.BLACK),
-                        content=Icon(icons.CLOSE),
-                        alignment=alignment.center,
-                    ),
-                    Column(
-                        [
-                            Text(
-                                "Nisi quis",
-                                theme_style=TextThemeStyle.TITLE_LARGE,
-                            ),
-                            Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
-                                "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                                theme_style=TextThemeStyle.BODY_MEDIUM,
-                            ),
-                        ],
-                        spacing=10,
-                        expand=True,
-                    ),
-                ],
-                spacing=20,
-            ),
-            bgcolor=colors.GREY_300,
-            padding=20,
+    def create_card(text):
+        return ft.Container(
+            content=ft.Column([
+                ft.Icon(ft.icons.SHAPE_LINE, size=40, color=ft.colors.GREY),
+                ft.Icon(ft.icons.SQUARE, size=40, color=ft.colors.GREY),
+                ft.Text(text, size=16, color=ft.colors.GREY),
+            ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
+            width=150,
+            height=150,
+            bgcolor=ft.colors.WHITE,
             border_radius=10,
-            margin=margin.only(bottom=10),
-        )
-        
-        ayuda_lista = [ayuda_contenedor for _ in range(5)]
-
-        content = ListView(
-            [
-                Text(
-                    "Ayuda",
-                    theme_style=TextThemeStyle.HEADLINE_LARGE,
-                ),
-                *ayuda_lista,
-            ],
-            spacing=20,
-            expand=True,
+            padding=10,
         )
 
-        return Row(
-            [
-                rail,
-                VerticalDivider(width=1),
-                Container(
-                    content=content,
-                    expand=True,
-                )
-            ],
-            expand=True,
-        )
+    sidebar = ft.NavigationRail(
+        selected_index=0,
+        label_type=ft.NavigationRailLabelType.ALL,
+        min_width=100,
+        min_extended_width=200,
+        destinations=[
+            ft.NavigationRailDestination(icon=ft.icons.HOME, label="Inicio"),
+            ft.NavigationRailDestination(icon=ft.icons.APPS, label="Aplicación"),
+            ft.NavigationRailDestination(icon=ft.icons.BAR_CHART, label="Estadísticas"),
+            ft.NavigationRailDestination(icon=ft.icons.HELP, label="Ayuda"),
+            ft.NavigationRailDestination(icon=ft.icons.SETTINGS, label="Configuración"),
+        ],
+    )
+
+    content = ft.Container(
+        content=ft.Column([
+            ft.Row([
+                create_card("1st"),
+                create_card("2nd"),
+                create_card("3rd"),
+                create_card("4th"),
+            ], alignment=ft.MainAxisAlignment.CENTER, spacing=20),
+            ft.Text(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                size=16,
+                text_align=ft.TextAlign.CENTER,
+                width=600,
+            ),
+        ], alignment=ft.MainAxisAlignment.CENTER, spacing=30, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+        expand=True,
+        alignment=ft.alignment.center,
+    )
+
+    page.add(
+        ft.Row([
+            sidebar,
+            ft.VerticalDivider(width=1),
+            ft.Container(width=20),  # Espaciador
+            content,
+            ft.Container(width=20),  # Espaciador
+        ], expand=True)
+    )
+
+ft.app(target=main)

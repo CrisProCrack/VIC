@@ -42,15 +42,16 @@ def main(page: Page):
                 label="Usuarios"
             ),
             NavigationRailDestination(
+                icon=icons.HELP_OUTLINE,
+                selected_icon=icons.HELP,
+                label="Ayuda"
+            ),
+            NavigationRailDestination(
                 icon=icons.SETTINGS_OUTLINED,
                 selected_icon=icons.SETTINGS,
                 label="Configuración"
             ),
-            NavigationRailDestination(
-                icon=icons.HELP_OUTLINE,
-                selected_icon=icons.HELP,
-                label="Ayuda"
-            )
+            
         ],
         on_change=set_pantalla
     )
