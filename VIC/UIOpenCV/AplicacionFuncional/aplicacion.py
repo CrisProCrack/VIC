@@ -2,6 +2,8 @@ from flet import *
 import base64
 import cv2
 import threading
+import sys
+import numpy
 
 cap = cv2.VideoCapture(0)
 
@@ -44,8 +46,6 @@ class AplicacionView(UserControl):
         def dropdown3_changed(e):
             print(f"Dropdown 3 changed to {e.control.value}")
 
-        def slider_changed(e):
-            print(f"Slider changed to {e.control.value}")
 
         dropdown1 = Dropdown(
             width=200,
@@ -118,23 +118,11 @@ class AplicacionView(UserControl):
                                     dropdown1,
                                     Container(height=20),
                                     dropdown2,
+                                    Container(height=20),
+                                    dropdown3,
                                 ]),
                                 alignment=alignment.center,
                             ),
-                            Card(
-                                elevation=30,
-                                content=Container(
-                                    bgcolor=colors.WHITE24,
-                                    padding=10,
-                                    border_radius=border_radius.all(20),
-                                    content=Column([
-                                        Slider(min=500, max=900, on_change=slider_changed),
-                                        Slider(min=500, max=900, on_change=slider_changed),
-                                    ])
-                                )
-                            ),
-                            Container(height=20),
-                            dropdown3,
                         ],
                         alignment=MainAxisAlignment.CENTER,
                         expand=True,

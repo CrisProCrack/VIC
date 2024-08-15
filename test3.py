@@ -1,196 +1,148 @@
-import flet as ft
 from flet import *
 import base64
 import cv2
+import threading
+import sys
+import numpy
 
 cap = cv2.VideoCapture(0)
 
-class Conteo(ft.UserControl):
+class Conteo(UserControl):
     def __init__(self):
         super().__init__()
-    
+        self.img = Image(border_radius=border_radius.all(20))
+        self.should_update = True
+
     def did_mount(self):
-        self.update_timer()
-    
+        self.th = threading.Thread(target=self.update_timer, args=(), daemon=True)
+        self.th.start()
+
+    def will_unmount(self):
+        self.should_update = False
+
     def update_timer(self):
-        while True:
+        while self.should_update:
             _, frame = cap.read()
             _, im_arr = cv2.imencode('.png', frame)
             im_b64 = base64.b64encode(im_arr)
             self.img.src_base64 = im_b64.decode("utf-8")
             self.update()
-    
+
     def build(self):
-        self.img = ft.Image(
-            border_radius=ft.border_radius.all(20)
-        )
         return self.img
 
-def main(page: Page):
-    def dropdown_changed(e):
-        print(f"Dropdown 1 changed to {e.control.value}")
+class AplicacionView(UserControl):
+    def __init__(self, page):
+        super().__init__()
+        self.page = page
+    
+    def build(self):
+        def dropdown_changed(e):
+            print(f"Dropdown 1 changed to {e.control.value}")
+        
+        def dropdown2_changed(e):
+            print(f"Dropdown 2 changed to {e.control.value}")
+        
+        def dropdown3_changed(e):
+            print(f"Dropdown 3 changed to {e.control.value}")
 
-    def dropdown2_changed(e):
-        print(f"Dropdown 2 changed to {e.control.value}")
 
-    def dropdown3_changed(e):
-        print(f"Dropdown 3 changed to {e.control.value}")
-
-    def height_changed(e):
-        print(f"Slider changed to {e.control.value}")
-
-    dropdown1 = Dropdown(
-        width=200,
-        options=[
-            ft.dropdown.Option("Opción 1"),
-            ft.dropdown.Option("Opción 2"),
-            ft.dropdown.Option("Opción 3"),
-        ],
-        on_change=dropdown_changed
-    )
-
-    dropdown2 = Dropdown(
-        width=200,
-        options=[
-            ft.dropdown.Option("Opción A"),
-            ft.dropdown.Option("Opción B"),
-            ft.dropdown.Option("Opción C"),
-        ],
-        on_change=dropdown2_changed
-    )
-
-    dropdown3 = Dropdown(
-        width=200,
-        options=[
-            ft.dropdown.Option("Opción A"),
-            ft.dropdown.Option("Opción B"),
-            ft.dropdown.Option("Opción C"),
-        ],
-        on_change=dropdown3_changed
-    )
-
-    rail = NavigationRail(
-        selected_index=0,
-        label_type=NavigationRailLabelType.ALL,
-        min_width=100,
-        min_extended_width=400,
-        leading=FloatingActionButton(icon=icons.CREATE, text="Añadir"),
-        group_alignment=-0.9,
-        destinations=[
-            NavigationRailDestination(
-                icon=icons.HOME_SHARP,
-                selected_icon=icons.HOME,
-                label="Inicio"
-            ),
-            NavigationRailDestination(
-                icon=icons.LINKED_CAMERA_ROUNDED,
-                selected_icon=icons.LINKED_CAMERA,
-                label="Aplicación"
-            ),
-            NavigationRailDestination(
-                icon=icons.ACCOUNT_CIRCLE_SHARP,
-                selected_icon=icons.ACCOUNT_CIRCLE,
-                label="Usuarios"
-            ),
-            NavigationRailDestination(
-                icon=icons.BAR_CHART_OUTLINED,
-                selected_icon=icons.BAR_CHART,
-                label="Estadísticas"
-            ),
-            NavigationRailDestination(
-                icon=icons.HELP_SHARP,
-                selected_icon=icons.HELP,
-                label="Ayuda"
-            ),
-            NavigationRailDestination(
-                icon=icons.SETTINGS_SHARP,
-                selected_icon=icons.SETTINGS,
-                label="Configuración"
-            ),
-            NavigationRailDestination(
-                icon=icons.EXIT_TO_APP_SHARP,
-                selected_icon=icons.EXIT_TO_APP,
-                label="Salir"
-            ),
-        ],
-        on_change=lambda e: print("Selected destination:", e.control.selected_index),
-    )
-
-    page.add(
-        Row(
-            [
-                rail,
-                VerticalDivider(width=1),
-                Column(
-                    [
-                        Text("Aplicación", theme_style=ft.TextThemeStyle.DISPLAY_LARGE),
-                        Container(height=53),
-                        Card(
-                            elevation=30,
-                            content=Container(
-                                bgcolor=ft.colors.WHITE24,
-                                padding=10,
-                                border_radius=ft.border_radius.all(20),
-                                content=Column([
-                                    Conteo(),
-                                    Text("OpenCV con Flet",
-                                        size=20, weight="bold",
-                                        color=ft.colors.BLACK),
-                                ])
-                            )
-                        ),
-                        Container(height=10),
-                        Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                            theme_style=ft.TextThemeStyle.BODY_LARGE,
-                            width=284,
-                            height=220,
-                            text_align=ft.TextAlign.JUSTIFY,
-                        ),
-                        Container(expand=True),
-                    ],
-                    expand=True,
-                    alignment=MainAxisAlignment.START,
-                ),
-                Column(
-                    [
-                        Container(
-                            content=Column([
-                                dropdown1,
-                                Container(height=20),
-                                dropdown2,
-                            ]),
-                            alignment=alignment.center,
-                        ),
-                        Card(
-                            elevation=30,
-                            content=Container(
-                                bgcolor=ft.colors.WHITE24,
-                                padding=10,
-                                border_radius=ft.border_radius.all(20),
-                                content=Column([
-                                    Slider(min=500, max=900, on_change=height_changed),
-                                    Slider(min=500, max=900, on_change=height_changed),
-                                ])
-                            )
-                        ),
-                        Container(height=20),
-                        dropdown3,
-                    ],
-                    alignment=MainAxisAlignment.CENTER,
-                    expand=True,
-                ),
+        dropdown1 = Dropdown(
+            width=200,
+            options=[
+                dropdown.Option("Opción 1"),
+                dropdown.Option("Opción 2"),
+                dropdown.Option("Opción 3"),
             ],
-            expand=True,
+            on_change=dropdown_changed
         )
-    )
+        
+        dropdown2 = Dropdown(
+            width=200,
+            options=[
+                dropdown.Option("Opción A"),
+                dropdown.Option("Opción B"),
+                dropdown.Option("Opción C"),
+            ],
+            on_change=dropdown2_changed
+        )
+        
+        dropdown3 = Dropdown(
+            width=200,
+            options=[
+                dropdown.Option("Opción A"),
+                dropdown.Option("Opción B"),
+                dropdown.Option("Opción C"),
+            ],
+            on_change=dropdown3_changed
+        )
+        
+        return Container(
+            content=Row(
+                [
+                    Column(
+                        [
+                            Text("Aplicación", theme_style=TextThemeStyle.DISPLAY_LARGE),
+                            Container(height=53),
+                            Card(
+                                elevation=30,
+                                content=Container(
+                                    bgcolor=colors.WHITE24,
+                                    padding=10,
+                                    border_radius=border_radius.all(20),
+                                    content=Column([
+                                        Conteo(),
+                                        Text("OpenCV con Flet",
+                                            size=20, weight="bold",
+                                            color=colors.BLACK),
+                                    ])
+                                )
+                            ),
+                            Container(height=10),
+                            Text(
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                                theme_style=TextThemeStyle.BODY_LARGE,
+                                width=284,
+                                height=220,
+                                text_align=TextAlign.JUSTIFY,
+                            ),
+                            Container(expand=True),
+                        ],
+                        expand=True,
+                        alignment=MainAxisAlignment.START,
+                    ),
+                    Column(
+                        [
+                            Container(
+                                content=Column([
+                                    dropdown1,
+                                    Container(height=20),
+                                    dropdown2,
+                                    Container(height=20),
+                                    dropdown3,
+                                ]),
+                                alignment=alignment.center,
+                            ),
+                        ],
+                        alignment=MainAxisAlignment.CENTER,
+                        expand=True,
+                    ),
+                ],
+                expand=True,
+            ),
+            expand=True
+        )
 
+def main(page: Page):
+    page.title = "OpenCV con Flet"
+    page.theme_mode = ThemeMode.LIGHT
     page.padding = 50
     page.window_left = page.window_left + 100
-    page.theme_mode = ft.ThemeMode.LIGHT
-    page.title = 'OpenCV con Flet'
+    
+    aplicacion_view = AplicacionView(page)
+    page.add(aplicacion_view)
 
-if __name__ == "__main__":
-    ft.app(target=main)
+
+    app(target=main)
     cap.release()
     cv2.destroyAllWindows()
