@@ -36,8 +36,8 @@ class ConfiguracionView(UserControl):
             ),
             Divider(),
             Text("Aplicación", 
-                 style=TextThemeStyle.TITLE_LARGE, 
-                 weight=FontWeight.BOLD),
+                style=TextThemeStyle.TITLE_LARGE, 
+                weight=FontWeight.BOLD),
             Row(
                 [
                     Text("Seleccionar cámaras disponibles",

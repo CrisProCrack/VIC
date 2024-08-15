@@ -41,8 +41,8 @@ contenedor = ft.Container(
                 content=ft.Column([
                     Conteo(),
                     ft.Text("OpenCV con Flet",
-                         size=20, weight="bold",
-                         color=ft.colors.BLACK),
+                        size=20, weight="bold",
+                        color=ft.colors.BLACK),
                 ]
                 ),
             )
