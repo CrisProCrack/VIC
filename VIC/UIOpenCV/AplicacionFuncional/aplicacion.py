@@ -37,6 +37,7 @@ class Conteo(UserControl):
         self.should_update = False
         if self.th:
             self.th.join()
+            self.th = None
 
 
     def update_timer(self):
