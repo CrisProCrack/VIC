@@ -1,147 +1,62 @@
-from flet import *
-import base64
+import flet as ft
 import cv2
-import threading
-import sys
+import numpy as np
+import base64
 
-cap = cv2.VideoCapture(0)
-
-class Conteo(UserControl):
-    def __init__(self):
-        super().__init__()
-        self.img = Image(border_radius=border_radius.all(20))
-        self.should_update = True
-
-    def did_mount(self):
-        self.th = threading.Thread(target=self.update_timer, args=(), daemon=True)
-        self.th.start()
-
-    def will_unmount(self):
-        self.should_update = False
-
-    def update_timer(self):
-        while self.should_update:
-            _, frame = cap.read()
-            _, im_arr = cv2.imencode('.png', frame)
-            im_b64 = base64.b64encode(im_arr)
-            self.img.src_base64 = im_b64.decode("utf-8")
-            self.update()
-
-    def build(self):
-        return self.img
-
-class AplicacionView(UserControl):
-    def __init__(self, page):
-        super().__init__()
-        self.page = page
-    
-    def build(self):
-        def dropdown_changed(e):
-            print(f"Dropdown 1 changed to {e.control.value}")
-        
-        def dropdown2_changed(e):
-            print(f"Dropdown 2 changed to {e.control.value}")
-        
-        def dropdown3_changed(e):
-            print(f"Dropdown 3 changed to {e.control.value}")
+def to_base64(image):
+    base64_image = cv2.imencode('.png', image)[1]
+    base64_image = base64.b64encode(base64_image).decode('utf-8') 
+    return base64_image
 
 
-        dropdown1 = Dropdown(
-            width=200,
-            options=[
-                dropdown.Option("Opción 1"),
-                dropdown.Option("Opción 2"),
-                dropdown.Option("Opción 3"),
-            ],
-            on_change=dropdown_changed
-        )
-        
-        dropdown2 = Dropdown(
-            width=200,
-            options=[
-                dropdown.Option("Opción A"),
-                dropdown.Option("Opción B"),
-                dropdown.Option("Opción C"),
-            ],
-            on_change=dropdown2_changed
-        )
-        
-        dropdown3 = Dropdown(
-            width=200,
-            options=[
-                dropdown.Option("Opción A"),
-                dropdown.Option("Opción B"),
-                dropdown.Option("Opción C"),
-            ],
-            on_change=dropdown3_changed
-        )
-        
-        return Container(
-            content=Row(
-                [
-                    Column(
-                        [
-                            Text("Aplicación", theme_style=TextThemeStyle.DISPLAY_LARGE),
-                            Container(height=53),
-                            Card(
-                                elevation=30,
-                                content=Container(
-                                    bgcolor=colors.WHITE24,
-                                    padding=10,
-                                    border_radius=border_radius.all(20),
-                                    content=Column([
-                                        Conteo(),
-                                        Text("OpenCV con Flet",
-                                            size=20, weight="bold",
-                                            color=colors.BLACK),
-                                    ])
-                                )
-                            ),
-                            Container(height=10),
-                            Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                                theme_style=TextThemeStyle.BODY_LARGE,
-                                width=284,
-                                height=220,
-                                text_align=TextAlign.JUSTIFY,
-                            ),
-                            Container(expand=True),
-                        ],
-                        expand=True,
-                        alignment=MainAxisAlignment.START,
-                    ),
-                    Column(
-                        [
-                            Container(
-                                content=Column([
-                                    dropdown1,
-                                    Container(height=20),
-                                    dropdown2,
-                                    Container(height=20),
-                                    dropdown3,
-                                ]),
-                                alignment=alignment.center,
-                            ),
-                        ],
-                        alignment=MainAxisAlignment.CENTER,
-                        expand=True,
-                    ),
-                ],
-                expand=True,
-            ),
-            expand=True
-        )
+def main(page):
 
-def main(page: Page):
-    page.title = "OpenCV con Flet"
-    page.theme_mode = ThemeMode.LIGHT
-    page.padding = 50
-    page.window_left = page.window_left + 100
-    
-    aplicacion_view = AplicacionView(page)
-    page.add(aplicacion_view)
+    # Create a blank image for the initial display,
+    # image element does not support None for src_base64
+    init_image = np.zeros((480, 640, 3), dtype=np.uint8) + 128
+    init_base64_image = to_base64(init_image)
+
+    image_src = ft.Image(src_base64=init_base64_image, width=640, height=480)
+    image_dst = ft.Image(src_base64=init_base64_image, width=640, height=480)
+
+    image_row = ft.Row([image_src, image_dst])
+
+    image = None
+
+    def edge_detection(e):
+        nonlocal image
+        if image is None:
+            return
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(gray, 10, 200)
+        edges = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+        base64_image = to_base64(edges)
+        image_dst.src_base64 = base64_image
+        image_dst.update()
+
+    def on_file_selected(e):
+        nonlocal image
+        file_path = e.files[0].path
+        print("file selected :", file_path)
+        image = cv2.imread(file_path)
+        base64_image = to_base64(image)
+        image_src.src_base64 = base64_image
+        image_src.update()
 
 
-    app(target=main)
-    cap.release()
-    cv2.destroyAllWindows()
+    file_picker = ft.FilePicker(on_result=on_file_selected)
+    page.overlay.append(file_picker)
+
+
+    def on_click(e):
+        file_picker.pick_files(allow_multiple=False, 
+                               file_type=ft.FilePickerFileType.IMAGE)
+
+    button = ft.ElevatedButton("Select Image File", on_click=on_click)
+    button_edge_detection = ft.ElevatedButton("Edge Detection", on_click=edge_detection)
+    page.add(button)
+    page.add(image_row)
+    page.add(button_edge_detection)
+
+
+ft.app(target=main)

@@ -53,6 +53,8 @@ class Conteo(UserControl):
 
     def build(self):
         return self.img
+    
+
 
 class AplicacionView(UserControl):
     def __init__(self, page):
@@ -84,13 +86,21 @@ class AplicacionView(UserControl):
             on_change=dropdown_changed
         )
         
+        """ dropdown2 = Dropdown(
+            width=200,
+            options=[
+                dropdown.Option("Face Detection"),
+            ],
+            on_change=dropdown_changed
+        ) """
+        
         return Container(
             content=Row(
                 [
                     Column(
                         [
                             Text("Aplicación", theme_style=TextThemeStyle.DISPLAY_LARGE),
-                            Container(height=53),
+                            #Container(height=20),
                             Card(
                                 elevation=30,
                                 content=Container(
@@ -109,7 +119,7 @@ class AplicacionView(UserControl):
                             Text(
                                 "Selecciona un filtro del menú desplegable para aplicarlo a la imagen en tiempo real.",
                                 theme_style=TextThemeStyle.BODY_LARGE,
-                                width=284,
+                                width=500,
                                 height=220,
                                 text_align=TextAlign.JUSTIFY,
                             ),
@@ -121,6 +131,7 @@ class AplicacionView(UserControl):
                     Column(
                         [
                             Container(
+                                #width=200,
                                 content=Column([
                                     dropdown1,
                                 ]),

@@ -3,6 +3,7 @@ from aplicacion import AplicacionView
 from ayuda import AyudaView
 from configuracion import ConfiguracionView
 from usuario import UsuarioView
+from imagenes import ImagenesView
 
 def main(page: Page):
     def salir_aplicacion(page: Page):
@@ -16,6 +17,7 @@ def main(page: Page):
     lst_pantallas = [
         Text("Inicio"),
         AplicacionView(page),  # Asumiendo que AplicacionView está definida y contiene Conteo
+        ImagenesView(page),
         UsuarioView(page),
         Text("Estadísticas"),
         AyudaView(page),
@@ -23,7 +25,7 @@ def main(page: Page):
     ]
     
     def set_pantalla(e):
-        if e.control.selected_index == 6:  # Índice de la opción "Salir"
+        if e.control.selected_index == 7:  # Índice de la opción "Salir"
             salir_aplicacion(page)
         else:
             cnt_principal.content = lst_pantallas[e.control.selected_index]
@@ -44,7 +46,12 @@ def main(page: Page):
             NavigationRailDestination(
                 icon=icons.LINKED_CAMERA_ROUNDED,
                 selected_icon=icons.LINKED_CAMERA,
-                label="Aplicación"
+                label="Video en tiempo real"
+            ),
+            NavigationRailDestination(
+                icon=icons.IMAGE_OUTLINED,
+                selected_icon=icons.IMAGE,
+                label="Imágenes"
             ),
             NavigationRailDestination(
                 icon=icons.ACCOUNT_CIRCLE_SHARP,
