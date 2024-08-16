@@ -17,15 +17,27 @@ class Conteo(UserControl):
     def __init__(self):
         super().__init__()
         self.img = Image(border_radius=border_radius.all(20))
-        self.should_update = True
+        self.should_update = False
         self.image_filter = PREVIEW
+        self.th = None
 
     def did_mount(self):
-        self.th = threading.Thread(target=self.update_timer, args=(), daemon=True)
-        self.th.start()
+        self.start_camera()
 
     def will_unmount(self):
+        self.stop_camera()
+
+    def start_camera(self):
+        if not self.should_update:
+            self.should_update = True
+            self.th = threading.Thread(target=self.update_timer, args=(), daemon=True)
+            self.th.start()
+
+    def stop_camera(self):
         self.should_update = False
+        if self.th:
+            self.th.join()
+
 
     def update_timer(self):
         while self.should_update:
@@ -61,6 +73,12 @@ class AplicacionView(UserControl):
         super().__init__()
         self.page = page
         self.conteo = Conteo()
+        
+    def did_mount(self):
+        self.conteo.start_camera()
+    
+    def will_unmount(self):
+        self.conteo.stop_camera()
     
     def build(self):
         def dropdown_changed(e):

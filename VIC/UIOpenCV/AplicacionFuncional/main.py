@@ -1,5 +1,5 @@
 from flet import *
-from aplicacion import AplicacionView
+from aplicacion import AplicacionView, Conteo
 from ayuda import AyudaView
 from configuracion import ConfiguracionView
 from usuario import UsuarioView
@@ -28,7 +28,13 @@ def main(page: Page):
         if e.control.selected_index == 7:  # Índice de la opción "Salir"
             salir_aplicacion(page)
         else:
-            cnt_principal.content = lst_pantallas[e.control.selected_index]
+            if isinstance(cnt_principal.content, UserControl):
+                cnt_principal.content.will_unmount()
+            new_content = lst_pantallas[e.control.selected_index]
+            cnt_principal.content = new_content
+            
+            if isinstance(new_content, UserControl):
+                new_content.did_mount()
             page.update()
     
     nav_rail = NavigationRail(
